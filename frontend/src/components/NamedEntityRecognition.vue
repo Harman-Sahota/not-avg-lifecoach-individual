@@ -42,7 +42,7 @@
       <hr />
     </div>
 
-    <div v-else>
+    <div v-else style="color:white">
       Please chat.
     </div>
   </div>

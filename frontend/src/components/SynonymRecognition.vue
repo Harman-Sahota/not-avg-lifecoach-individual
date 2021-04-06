@@ -7,7 +7,7 @@
       <div v-html="fullText"></div>
       <hr />
     </div>
-    <div v-else>
+    <div v-else style="color:white">
       Please chat first before Synonym Recognition analysis is available
     </div>
   </div>

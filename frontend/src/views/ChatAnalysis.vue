@@ -8,12 +8,13 @@
     </b-navbar>
     <b-container fixed fluid>
       <br />
-      <h1 class="text-dark">Chat Analysis</h1>
+      <h1 class="text-light">Chat Analysis</h1>
       <br />
       <SentimentAnalysis v-show="showComponent.sentimentAnalysis" />
       <NamedEntityRecognition v-show="showComponent.namedEntityRecognition" />
       <PartsOfSpeech v-show="showComponent.partOfSpeech" />
       <SynonymRecognition v-show="showComponent.synonymRecognition" />
+      <Wikipedia v-show="showComponent.wikipedia" />
       <b-row class="py-5 my-5"
         ><hr />
         <hr />
@@ -25,6 +26,7 @@
       fixed="bottom"
       variant="info"
       class="center"
+     
     >
       <b-navbar-nav class="mx-auto">
         <b-nav-item @click="showPartOfSpeech"
@@ -39,6 +41,9 @@
         <b-nav-item @click="showSynonymRecognition"
           >Synonym Recognition</b-nav-item
         >
+        <b-nav-item @click="showWikipedia"
+          >Wikipedia</b-nav-item
+        >
       </b-navbar-nav>
     </b-navbar>
   </div>
@@ -49,7 +54,7 @@ import SentimentAnalysis from "@/components/SentimentAnalysis.vue";
 import NamedEntityRecognition from "../components/NamedEntityRecognition.vue";
 import PartsOfSpeech from "../components/PartsOfSpeech.vue";
 import SynonymRecognition from "../components/SynonymRecognition.vue";
-
+import Wikipedia from "../components/Wikipedia.vue";
 export default {
   data() {
     return {
@@ -63,11 +68,23 @@ export default {
     SentimentAnalysis,
     PartsOfSpeech,
     NamedEntityRecognition,
-    SynonymRecognition
+    SynonymRecognition,
+    Wikipedia
   },
   methods: {
     goToChatRoute() {
       this.$router.push("/");
+    },
+     showWikipedia() {
+      this.$store.commit("setConversation", this.conversation);
+      this.$store.commit("setCurrentChatAnalysisComponentBools", {
+        sentimentAnalysis: false,
+        partOfSpeech: false,
+        namedEntityRecognition: false,
+        synonymRecognition: false,
+        wikipedia: true
+      });
+      this.updateComponent();
     },
     showSentimentAnalysis() {
       this.$store.commit("setConversation", this.conversation);
@@ -118,4 +135,25 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+h3{
+color:white;
+}
+.list-group-item{
+background-color:#2e151b;
+color:white;
+}
+h5{
+color:#DA7B93;
+}
+th{
+background-color:pink !important;
+}
+tr{
+background-color:white !important;
+border-bottom:1px solid #2e151b;
+}
+.navbar{
+background-color:#376e64 !important;
+}
+</style>

@@ -7,7 +7,7 @@
       :repliesAndSentimentAnalyses="repliesAndSentimentAnalyses"
       :conversation="conversation"
     />
-    <div v-else>
+    <div v-else style="color:white">
       Please go to chat
     </div>
   </div>
@@ -36,4 +36,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.btn-info{
+background-color:#DA7B93;
+ }
+ .btn-info:hover{
+background-color:#DA7B93;
+ }
+</style>

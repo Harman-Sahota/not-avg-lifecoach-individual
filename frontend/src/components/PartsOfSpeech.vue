@@ -9,7 +9,7 @@
         <hr />
       </div>
     </div>
-    <div v-else>
+    <div v-else style="color:white">
       Please chat to enable POS Tagging
     </div>
   </div>
