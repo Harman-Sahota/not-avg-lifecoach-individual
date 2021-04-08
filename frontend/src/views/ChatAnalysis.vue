@@ -15,6 +15,7 @@
       <PartsOfSpeech v-show="showComponent.partOfSpeech" />
       <SynonymRecognition v-show="showComponent.synonymRecognition" />
       <Wikipedia v-show="showComponent.wikipedia" />
+      <Translate v-show="showComponent.translate" />
       <b-row class="py-5 my-5"
         ><hr />
         <hr />
@@ -44,6 +45,9 @@
         <b-nav-item @click="showWikipedia"
           >Wikipedia</b-nav-item
         >
+         <b-nav-item @click="showTranslate"
+          >Translate</b-nav-item
+        >
       </b-navbar-nav>
     </b-navbar>
   </div>
@@ -55,6 +59,7 @@ import NamedEntityRecognition from "../components/NamedEntityRecognition.vue";
 import PartsOfSpeech from "../components/PartsOfSpeech.vue";
 import SynonymRecognition from "../components/SynonymRecognition.vue";
 import Wikipedia from "../components/Wikipedia.vue";
+import Translate from "../components/Translate.vue";
 export default {
   data() {
     return {
@@ -74,6 +79,18 @@ export default {
   methods: {
     goToChatRoute() {
       this.$router.push("/");
+    },
+     showTranslate() {
+      this.$store.commit("setConversation", this.conversation);
+      this.$store.commit("setCurrentChatAnalysisComponentBools", {
+        sentimentAnalysis: false,
+        partOfSpeech: false,
+        namedEntityRecognition: false,
+        synonymRecognition: false,
+        translate: true,
+        wikipedia: false
+      });
+      this.updateComponent();
     },
      showWikipedia() {
       this.$store.commit("setConversation", this.conversation);
