@@ -99,7 +99,8 @@ export default {
         partOfSpeech: false,
         namedEntityRecognition: false,
         synonymRecognition: false,
-        wikipedia: true
+        wikipedia: true,
+        translate: false
       });
       this.updateComponent();
     },
