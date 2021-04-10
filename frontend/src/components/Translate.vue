@@ -52,9 +52,6 @@
 
 <script>
 import translate from "translate";
-const text = await translate("Hello world", "es");
-console.log(text); // Hola mundo
-
 export default {
   data() {
     return {
