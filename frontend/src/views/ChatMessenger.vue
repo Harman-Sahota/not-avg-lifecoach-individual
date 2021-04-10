@@ -2,6 +2,9 @@
   <div id="chat-bot">
     <div id="chat-header">
       <h5 id="chat-header-text">Not Your Average Life Coach</h5>
+      <div>
+        <b-form-select v-model="selected" :options="options"></b-form-select>
+      </div>
       <button
         :disabled="userMessages.length === 0 || typingEnabled === false"
         @click="goToChatAnalysisRoute"
@@ -37,15 +40,19 @@
 <script>
 import Vue from "vue";
 import { makeHandshake, postMessage, getBotReply } from "@/services/axios.js";
+import { FormSelectPlugin } from "bootstrap-vue";
 import VueChatScroll from "vue-chat-scroll";
 import Bot from "@/components/Bot.vue";
 import User from "../components/User.vue";
-Vue.use(VueChatScroll);
+import translate from "translate";
 
+Vue.use(VueChatScroll);
+Vue.use(FormSelectPlugin);
+translate.engine = "libre";
 export default {
   components: {
     Bot,
-    User
+    User,
   },
   created() {
     this.nlpHandshake();
@@ -65,13 +72,27 @@ export default {
       botMessageCount: -1,
       conversation: [],
       typingEnabled: true,
-      error: ""
+      error: "",
+      selected: "en",
+      options: [
+        { value: "en", text: "English" },
+        { value: "ja", text: "Japanese" },
+        { value: "ko", text: "Korean" },
+        { value: "it", text: "Italian" },
+        { value: "hi", text: "Hindi" },
+        { value: "ar", text: "Arabic" },
+        { value: "fr", text: "French" },
+        { value: "ru", text: "Russian" },
+        { value: "ge", text: "German" },
+        {  value: "pt", text: "Portuguese" },
+        { value: "zh", text: "Chinese" },
+        { value: "es", text: "Spanish" },
+      ],
     };
   },
-
   name: "ChatBot",
   props: {
-    msg: String
+    msg: String,
   },
   methods: {
     goToChatAnalysisRoute() {
@@ -82,15 +103,16 @@ export default {
     initialMessage() {
       this.conversation.push({
         chatStyle: "bot",
-        text: "Hello, I am your Motivational Lifecoach, ask me anything!"
+        text:
+          'Hello, I am your Motivational Lifecoach, and you can ask me anything! ',
       });
     },
     nlpHandshake() {
       makeHandshake()
-        .then(dataId => {
+        .then((dataId) => {
           this.nlpRestToken = dataId;
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = "handshake api call is unsuccessful";
         });
     },
@@ -99,70 +121,77 @@ export default {
         this.userMessages.push(this.userMessage);
         this.conversation.push({
           chatStyle: "user",
-          text: this.userMessage
+          text: this.userMessage,
         });
-
-        postMessage(this.userMessage, this.nlpRestToken)
-          .then(() => {
-            this.typingEnabled = false;
-            setTimeout(() => {
-              this.typingEnabled = true;
-              this.$nextTick(() => {
-                this.$refs["textinput"].focus();
-              });
-              this.getReply();
-            }, Math.random() * 1500 + 500);
-          })
-          .catch(error => {
-            console.log(error);
-          })
-          .finally(() => {
-            this.userMessage = "";
-          });
+        if (this.userMessage.substring(0, 16) == "translate this: ") {
+          this.userMessage = this.userMessage.substring(16)
+          translate(this.userMessage, this.selected).then((data) => {
+                  this.conversation.push({
+                    chatStyle: "bot",
+                    text: data,
+                  }); 
+                }).then((this.userMessage = ""))
+        }else {
+          postMessage(this.userMessage, this.nlpRestToken)
+            .then(() => {
+              this.typingEnabled = false;
+              setTimeout(() => {
+                this.typingEnabled = true;
+                this.$nextTick(() => {
+                  this.$refs["textinput"].focus();
+                });
+                this.getReply();
+              }, Math.random() * 1500 + 500);
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              this.userMessage = "";
+            });
+        }
       }
     },
     getReply() {
       getBotReply(this.nlpRestToken)
-        .then(response => {
+        .then((response) => {
           this.reply = response.data.activities[(this.botMessageCount += 2)];
           this.allConvoData = response.data;
           this.botMessages.push(this.reply.text);
-          this.conversation.push({
-            chatStyle: "bot",
-            text: this.reply.text
+          translate(this.reply.text, this.selected).then((data) => {
+            this.conversation.push({
+              chatStyle: "bot",
+              text: data,
+            });
           });
-        })
-        .catch(error => {
-          console.log(error);
         })
         .finally(() => {});
     },
     updateMessage(currentMessage) {
       this.userMessage = currentMessage;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 @import "@/scss/theme.scss";
-
 @media only screen and (max-width: 600px) {
   #chat-bot {
     width: 100vw !important;
     height: 100vh !important;
     margin: 0 !important;
+ 
   }
 }
-
 .button-link {
   height: fit-content;
-  background-color: $accent;
+  background-color: #DA7B93;
   border-radius: 8px;
   border-width: 1px;
-  border-color: $accent;
-  text-shadow: 1px 1px 1px $accentDark;
-  color: $light;
+  border-color: #0389c5;
+  text-shadow: 1px 1px 1px #444444;
+  color: #F5F5F5;
   padding: 3px 10px;
   transition-duration: 0.4s;
   text-align: center;
@@ -170,10 +199,9 @@ export default {
   margin-left: auto;
   margin-right: 5px;
 }
-
 .button-link:hover {
-  background-color: $accentDark;
-  color: #ffffff;
+  background-color: #2e151b;
+  color: 	#F5F5F5;
 }
 ul {
   list-style-type: none;
@@ -186,15 +214,13 @@ li {
 a {
   color: #42b983;
 }
-
 #chat-header-text {
   margin-left: auto;
   margin-right: auto;
 }
-
 #chat-header {
   margin: 0em 0em auto 0em;
-  background-color: $primary;
+  background-color: #1c3334;
   justify-content: center;
   align-items: center;
   height: fit-content;
@@ -203,24 +229,23 @@ a {
   z-index: 100;
 }
 #chat-header h5 {
-  color: $light;
+  color: 	#F5F5F5;
   margin: 3% 2%;
 }
-
 .send-message {
-  background-color: $light;
+  background-color: 	#F5F5F5;
   z-index: 1;
   border: none;
   width: 3em;
-  border-radius: 40px;
 }
 .user-input {
-  background-color: $light;
+  background-color: 	#F5F5F5;
   border-top: $neutral solid 2px;
   margin: 0em 0em 0em 0em;
   display: flex;
 }
 .text-input {
+  color: black;
   padding: 1em;
   border-right: none;
   border-bottom: none;
@@ -228,15 +253,15 @@ a {
   border-top: none;
   width: -webkit-fill-available;
   width: -moz-available;
+  background-color: $light;
 }
-
 .filler {
   height: -webkit-fill-available;
   height: -moz-available;
   height: inherit;
 }
-
 .chat-messages {
+  background: 	#F5F5F5;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -245,8 +270,8 @@ a {
   height: -moz-available;
   height: 100%;
 }
-
 .chat-message {
+  color: white;
   display: flex;
   width: 50%;
   padding: 0.2em;
@@ -254,7 +279,7 @@ a {
   margin-bottom: 0.5em;
 }
 .botMessage {
-  background-color: $tertiary;
+  background-color: #DA7B93;
   margin-right: auto;
   margin-left: 5px;
   border-radius: 5px;
@@ -264,26 +289,23 @@ a {
   padding-bottom: 15px;
   padding-right: 15px;
 }
-
 .botPic {
   width: 3em;
   height: 3em;
+  padding-left: 1.2px;
 }
-
 .bot-flexbox {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .user-flexbox {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .userMessage {
-  background-color: $secondary;
+  background-color: #57ba9b;
   margin-left: auto;
   margin-right: 5px;
   border-radius: 5px;
@@ -297,20 +319,19 @@ a {
 .userPic {
   width: 3em;
   height: 3em;
+  padding-right: 1.2px;
 }
-
 header .filler {
   flex: 0 10000 100%;
 }
 #send-icon {
   width: 1.75rem;
 }
-
 #chat-bot {
   padding: 0px;
   background-color: $light;
-  border: $accent solid 4px;
-  width: 450px;
+  border: #376e6f solid 4px;
+  width: 530px;
   height: 80vh;
   display: flex;
   flex-direction: column;
