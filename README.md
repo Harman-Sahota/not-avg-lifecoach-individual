@@ -250,3 +250,31 @@ The sentiment analysis is the first page that pops up when you click the analyze
 - Created Level 0/ Level 1 DFDs
 - Created Videos
 
+## Individual
+
+### Wikipedia API
+
+https://www.npmjs.com/package/wikipedia
+
+### How to use:
+
+1. Chat with the bot 
+2. Click analyse button on the top right of the  chatbox 
+3. Click on the wikipedia option from the navigation bar (at the bottom)
+4. This page lists all wikipedia articles based on the keywords in the messages, clicking on the title links you to the article on wikipedia
+
+### Example Output:
+
+
+### Google Translate API
+
+https://www.npmjs.com/package/wikipedia
+
+### How to use:
+
+1. Select a language from the dropdown list right next to the analyse button(top right)
+2. send a message to the bot
+3. the bot will reply in the selected message (default selected language is english)
+
+### Example Output:
+
