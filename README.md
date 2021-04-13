@@ -278,4 +278,4 @@ https://www.npmjs.com/package/wikipedia
 3. the bot will reply in the selected message (default selected language is english)
 
 ### Example Output:
-
+<img height="500" src="Documentation/img/translate.PNG">
