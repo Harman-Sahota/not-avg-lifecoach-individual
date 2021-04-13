@@ -264,7 +264,7 @@ https://www.npmjs.com/package/wikipedia
 4. This page lists all wikipedia articles based on the keywords in the messages, clicking on the title links you to the article on wikipedia
 
 ### Example Output:
-![image](https://user-images.githubusercontent.com/56659047/114597418-6359bc80-9cae-11eb-9968-3f8e3ed954b9.png)
+<img height="500" src="Documentation/img/wiki.PNG">
 
 
 ### Google Translate API
